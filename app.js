@@ -1,4 +1,5 @@
-const remainderList = []; // Array to store remainders
+const remainderListKey = "remainderList";
+let remainderList = loadRemainders(); // Load saved remainders from localStorage
 
 // Calculate Interest
 document.getElementById("calculate").addEventListener("click", function () {
@@ -24,6 +25,8 @@ document.getElementById("calculate").addEventListener("click", function () {
 document.getElementById("setRemainder").addEventListener("click", function () {
     const borrower = document.getElementById("borrower").value.trim();
     const dueDate = new Date(document.getElementById("dueDate").value);
+    dueDate.setHours(9, 0, 0); // Example: Notification at 9 AM
+
 
     if (!borrower) {
         alert("Please enter the borrower's name.");
@@ -45,6 +48,7 @@ document.getElementById("setRemainder").addEventListener("click", function () {
 
     // Add remainder to the list
     remainderList.push({ borrower, dueDate });
+    saveRemainders(); // Save updated list to localStorage
     updateRemainderList();
 
     // Set notification
@@ -86,5 +90,20 @@ function updateRemainderList() {
 // Remove Remainder
 function removeRemainder(index) {
     remainderList.splice(index, 1);
+    saveRemainders(); // Save updated list to localStorage
     updateRemainderList();
 }
+
+// Save Remainders to localStorage
+function saveRemainders() {
+    localStorage.setItem(remainderListKey, JSON.stringify(remainderList));
+}
+
+// Load Remainders from localStorage
+function loadRemainders() {
+    const savedRemainders = localStorage.getItem(remainderListKey);
+    return savedRemainders ? JSON.parse(savedRemainders) : [];
+}
+
+// Initialize the app
+updateRemainderList();
