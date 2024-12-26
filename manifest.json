@@ -1,0 +1,16 @@
+{
+    "name": "Interest Calculator",
+    "short_name": "Calculator",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4CAF50",
+    "icons": [
+       
+        {
+            "src": "percentage.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
