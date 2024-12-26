@@ -10,6 +10,9 @@
 <body>
     <h1>Interest Calculator</h1>
     <form id="interestForm">
+        <label for="borrower">Borrower Name:</label>
+        <input type="text" id="borrower" placeholder="Enter borrower's name" required>
+        <br>
         <label for="amount">Principal Amount:</label>
         <input type="number" id="amount" placeholder="Enter amount" required>
         <br>
@@ -19,9 +22,19 @@
         <label for="time">Time (years):</label>
         <input type="number" id="time" placeholder="Enter time" required>
         <br>
+        <label for="dueDate">Last Due Date:</label>
+        <input type="date" id="dueDate" required>
+        <br>
         <button type="button" id="calculate">Calculate</button>
+        <button type="button" id="setRemainder">Set Remainder</button>
     </form>
+    
     <h2 id="result"></h2>
+    
+    <h3>Remainder List</h3>
+    <ul id="remainderList"></ul>
+    
+    
     <script src="app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
