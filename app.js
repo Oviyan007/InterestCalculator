@@ -12,7 +12,9 @@ document.getElementById("calculate").addEventListener("click", function () {
         return;
     }
 
-    const interest = (amount * rate * time) / 100;
+    // Correct the formula by dividing the rate by 100
+    const interest = (amount * (rate / 100) * time);
+    console.log(rate/100);
     const totalAmount = amount + interest;
 
     document.getElementById("result").innerHTML = `
