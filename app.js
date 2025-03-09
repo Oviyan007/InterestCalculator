@@ -1,6 +1,12 @@
 const remainderListKey = "remainderList";
 let remainderList = loadRemainders(); // Load saved remainders from localStorage
 
+// Function to Play Notification Sound
+function playNotificationSound() {
+    const audio = new Audio("/notification.wav"); // Ensure this file exists
+    audio.play().catch(error => console.error("Error playing sound:", error));
+}
+
 // Calculate Interest
 document.getElementById("calculate").addEventListener("click", function () {
     const amount = parseFloat(document.getElementById("amount").value);
@@ -12,7 +18,6 @@ document.getElementById("calculate").addEventListener("click", function () {
         return;
     }
 
-    // Correct the formula by dividing the rate by 100
     const interest = (amount * (rate / 100) * time);
     const totalAmount = amount + interest;
 
@@ -22,11 +27,11 @@ document.getElementById("calculate").addEventListener("click", function () {
     `;
 });
 
-// Set Remainder
+// Set Reminder
 document.getElementById("setRemainder").addEventListener("click", function () {
     const borrower = document.getElementById("borrower").value.trim();
     const dueDate = new Date(document.getElementById("dueDate").value);
-    dueDate.setHours(11, 10, 0); // Example: Notification at 9 AM
+    dueDate.setHours(11, 10, 0); // Example: Notification at 11:10 AM
 
     if (!borrower) {
         alert("Please enter the borrower's name.");
@@ -46,27 +51,33 @@ document.getElementById("setRemainder").addEventListener("click", function () {
         return;
     }
 
-    // Add remainder to the list
+    // Add reminder to the list
     remainderList.push({ borrower, dueDate });
     saveRemainders(); // Save updated list to localStorage
 
-    // Set notification
+    // Set Notification
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(registration => {
             if (Notification.permission === "granted") {
                 setTimeout(() => {
                     registration.showNotification("Reminder Alert", {
                         body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
-                        icon: "/icon-192x192.png" // Ensure this file exists
+                        icon: "/percentage.png"
                     });
+
+                    // Play sound when notification appears
+                    playNotificationSound();
                 }, timeUntilDue);
             } else {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
                         registration.showNotification("Reminder Alert", {
                             body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
-                            icon: "/icon-192x192.png"
+                            icon: "/percentage.png"
                         });
+
+                        // Play sound
+                        playNotificationSound();
                     } else {
                         alert("Notifications are blocked. Please enable them.");
                     }
@@ -80,7 +91,7 @@ document.getElementById("setRemainder").addEventListener("click", function () {
     updateRemainderList(); // Update the UI
 });
 
-// Update Remainder List
+// Update Reminder List
 function updateRemainderList() {
     const listElement = document.getElementById("remainderList");
     listElement.innerHTML = ""; // Clear existing list
@@ -95,19 +106,19 @@ function updateRemainderList() {
     });
 }
 
-// Remove Remainder
+// Remove Reminder
 function removeRemainder(index) {
     remainderList.splice(index, 1);
     saveRemainders(); // Save updated list to localStorage
     updateRemainderList();
 }
 
-// Save Remainders to localStorage
+// Save Reminders to localStorage
 function saveRemainders() {
     localStorage.setItem(remainderListKey, JSON.stringify(remainderList));
 }
 
-// Load Remainders from localStorage
+// Load Reminders from localStorage
 function loadRemainders() {
     const savedRemainders = localStorage.getItem(remainderListKey);
     return savedRemainders ? JSON.parse(savedRemainders) : [];
