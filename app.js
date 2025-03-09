@@ -1,17 +1,6 @@
 const remainderListKey = "remainderList";
 let remainderList = loadRemainders(); // Load saved remainders from localStorage
 
-// Function to Play Notification Sound
-function playNotificationSound() {
-    const audio = new Audio("/notification.wav"); // Ensure this file exists
-    audio.play().then(() => {
-        console.log("Notification sound played successfully.");
-    }).catch(error => {
-        console.error("Error playing sound:", error);
-    });
-}
-
-
 // Calculate Interest
 document.getElementById("calculate").addEventListener("click", function () {
     const amount = parseFloat(document.getElementById("amount").value);
@@ -23,20 +12,21 @@ document.getElementById("calculate").addEventListener("click", function () {
         return;
     }
 
+    // Correct the formula by dividing the rate by 100
     const interest = (amount * (rate / 100) * time);
     const totalAmount = amount + interest;
 
-    document.getElementById("result").innerHTML = `
+    document.getElementById("result").innerHTML = 
         Interest: ₹${interest.toFixed(2)}<br>
         Total Amount: ₹${totalAmount.toFixed(2)}
-    `;
+    ;
 });
 
-// Set Reminder
+// Set Remainder
 document.getElementById("setRemainder").addEventListener("click", function () {
     const borrower = document.getElementById("borrower").value.trim();
     const dueDate = new Date(document.getElementById("dueDate").value);
-    dueDate.setHours(11, 10, 0); // Example: Notification at 11:10 AM
+    dueDate.setHours(11, 10, 0); // Example: Notification at 9 AM
 
     if (!borrower) {
         alert("Please enter the borrower's name.");
@@ -56,33 +46,27 @@ document.getElementById("setRemainder").addEventListener("click", function () {
         return;
     }
 
-    // Add reminder to the list
+    // Add remainder to the list
     remainderList.push({ borrower, dueDate });
     saveRemainders(); // Save updated list to localStorage
 
-    // Set Notification
+    // Set notification
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(registration => {
             if (Notification.permission === "granted") {
                 setTimeout(() => {
                     registration.showNotification("Reminder Alert", {
-                        body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
-                        icon: "/percentage.png"
+                        body: Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).,
+                        icon: "/percentage.png" // Ensure this file exists
                     });
-
-                    // Play sound when notification appears
-                    playNotificationSound();
                 }, timeUntilDue);
             } else {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
                         registration.showNotification("Reminder Alert", {
-                            body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
+                            body: Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).,
                             icon: "/percentage.png"
                         });
-
-                        // Play sound
-                        playNotificationSound();
                     } else {
                         alert("Notifications are blocked. Please enable them.");
                     }
@@ -96,34 +80,34 @@ document.getElementById("setRemainder").addEventListener("click", function () {
     updateRemainderList(); // Update the UI
 });
 
-// Update Reminder List
+// Update Remainder List
 function updateRemainderList() {
     const listElement = document.getElementById("remainderList");
     listElement.innerHTML = ""; // Clear existing list
 
     remainderList.forEach(({ borrower, dueDate }, index) => {
         const listItem = document.createElement("li");
-        listItem.innerHTML = `
+        listItem.innerHTML = 
             <strong>${borrower}</strong> - Due on: ${new Date(dueDate).toDateString()}
             <button onclick="removeRemainder(${index})">Remove</button>
-        `;
+        ;
         listElement.appendChild(listItem);
     });
 }
 
-// Remove Reminder
+// Remove Remainder
 function removeRemainder(index) {
     remainderList.splice(index, 1);
     saveRemainders(); // Save updated list to localStorage
     updateRemainderList();
 }
 
-// Save Reminders to localStorage
+// Save Remainders to localStorage
 function saveRemainders() {
     localStorage.setItem(remainderListKey, JSON.stringify(remainderList));
 }
 
-// Load Reminders from localStorage
+// Load Remainders from localStorage
 function loadRemainders() {
     const savedRemainders = localStorage.getItem(remainderListKey);
     return savedRemainders ? JSON.parse(savedRemainders) : [];
