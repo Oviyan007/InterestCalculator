@@ -24,3 +24,14 @@ self.addEventListener("fetch", event => {
         })
     );
 });
+
+// ✅ Handle Push Notifications
+self.addEventListener("push", event => {
+    const data = event.data ? event.data.text() : "Reminder!";
+    event.waitUntil(
+        self.registration.showNotification("Reminder Alert", {
+            body: data,
+            icon: "/icon-192x192.png"  // Ensure this file exists in your project
+        })
+    );
+});
