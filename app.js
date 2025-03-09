@@ -4,8 +4,13 @@ let remainderList = loadRemainders(); // Load saved remainders from localStorage
 // Function to Play Notification Sound
 function playNotificationSound() {
     const audio = new Audio("/notification.wav"); // Ensure this file exists
-    audio.play().catch(error => console.error("Error playing sound:", error));
+    audio.play().then(() => {
+        console.log("Notification sound played successfully.");
+    }).catch(error => {
+        console.error("Error playing sound:", error);
+    });
 }
+
 
 // Calculate Interest
 document.getElementById("calculate").addEventListener("click", function () {
