@@ -31,7 +31,7 @@ self.addEventListener("push", event => {
     event.waitUntil(
         self.registration.showNotification("Reminder Alert", {
             body: data,
-            icon: "/icon-192x192.png"  // Ensure this file exists in your project
+            icon: "/percentage.png"  // Ensure this file exists in your project
         })
     );
 });
