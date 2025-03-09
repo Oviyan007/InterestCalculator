@@ -14,7 +14,6 @@ document.getElementById("calculate").addEventListener("click", function () {
 
     // Correct the formula by dividing the rate by 100
     const interest = (amount * (rate / 100) * time);
-    console.log(rate/100);
     const totalAmount = amount + interest;
 
     document.getElementById("result").innerHTML = `
@@ -28,7 +27,6 @@ document.getElementById("setRemainder").addEventListener("click", function () {
     const borrower = document.getElementById("borrower").value.trim();
     const dueDate = new Date(document.getElementById("dueDate").value);
     dueDate.setHours(11, 10, 0); // Example: Notification at 9 AM
-
 
     if (!borrower) {
         alert("Please enter the borrower's name.");
@@ -51,34 +49,36 @@ document.getElementById("setRemainder").addEventListener("click", function () {
     // Add remainder to the list
     remainderList.push({ borrower, dueDate });
     saveRemainders(); // Save updated list to localStorage
-    updateRemainderList();
 
     // Set notification
-   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-        if (Notification.permission === "granted") {
-            setTimeout(() => {
-                registration.showNotification("Reminder Alert", {
-                    body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
-                    icon: "/icon-192x192.png" // Ensure this file exists
-                });
-            }, timeUntilDue);
-        } else {
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(registration => {
+            if (Notification.permission === "granted") {
+                setTimeout(() => {
                     registration.showNotification("Reminder Alert", {
                         body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
-                        icon: "/icon-192x192.png"
+                        icon: "/icon-192x192.png" // Ensure this file exists
                     });
-                } else {
-                    alert("Notifications are blocked. Please enable them.");
-                }
-            });
-        }
-    });
-} else {
-    alert("Service Worker not supported.");
-}
+                }, timeUntilDue);
+            } else {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        registration.showNotification("Reminder Alert", {
+                            body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
+                            icon: "/icon-192x192.png"
+                        });
+                    } else {
+                        alert("Notifications are blocked. Please enable them.");
+                    }
+                });
+            }
+        });
+    } else {
+        alert("Service Worker not supported.");
+    }
+
+    updateRemainderList(); // Update the UI
+});
 
 // Update Remainder List
 function updateRemainderList() {
