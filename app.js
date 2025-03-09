@@ -54,25 +54,31 @@ document.getElementById("setRemainder").addEventListener("click", function () {
     updateRemainderList();
 
     // Set notification
-    if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                setTimeout(() => {
-                    new Notification("Remainder Alert", {
-                        body: `Remainder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
-                        icon: "percentage.png" // Replace with your app icon
+   if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(registration => {
+        if (Notification.permission === "granted") {
+            setTimeout(() => {
+                registration.showNotification("Reminder Alert", {
+                    body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
+                    icon: "/icon-192x192.png" // Ensure this file exists
+                });
+            }, timeUntilDue);
+        } else {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    registration.showNotification("Reminder Alert", {
+                        body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
+                        icon: "/icon-192x192.png"
                     });
-                }, timeUntilDue);
-
-                alert("Remainder has been set!");
-            } else {
-                alert("Notifications are blocked. Please enable them in your browser settings.");
-            }
-        });
-    } else {
-        alert("Notifications are not supported in this browser.");
-    }
-});
+                } else {
+                    alert("Notifications are blocked. Please enable them.");
+                }
+            });
+        }
+    });
+} else {
+    alert("Service Worker not supported.");
+}
 
 // Update Remainder List
 function updateRemainderList() {
