@@ -27,7 +27,7 @@ document.getElementById("calculate").addEventListener("click", function () {
 document.getElementById("setRemainder").addEventListener("click", function () {
     const borrower = document.getElementById("borrower").value.trim();
     const dueDate = new Date(document.getElementById("dueDate").value);
-    dueDate.setHours(9, 0, 0); // Example: Notification at 9 AM
+    dueDate.setHours(11, 10, 0); // Example: Notification at 9 AM
 
 
     if (!borrower) {
