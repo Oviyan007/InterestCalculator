@@ -6,6 +6,7 @@ const urlsToCache = [
     "/app.js",
     "/manifest.json",
     "/percentage.png",
+    "/notification.wav",
 ];
 
 self.addEventListener("install", event => {
@@ -31,6 +32,7 @@ self.addEventListener("push", event => {
         self.registration.showNotification("Reminder Alert", {
             body: data,
             icon: "/percentage.png"  // Ensure this file exists in your project
+            
         })
     );
 });
