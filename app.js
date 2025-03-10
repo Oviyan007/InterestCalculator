@@ -16,17 +16,17 @@ document.getElementById("calculate").addEventListener("click", function () {
     const interest = (amount * (rate / 100) * time);
     const totalAmount = amount + interest;
 
-    document.getElementById("result").innerHTML = 
+    document.getElementById("result").innerHTML = `
         Interest: ₹${interest.toFixed(2)}<br>
         Total Amount: ₹${totalAmount.toFixed(2)}
-    ;
+    `;
 });
 
 // Set Remainder
 document.getElementById("setRemainder").addEventListener("click", function () {
     const borrower = document.getElementById("borrower").value.trim();
     const dueDate = new Date(document.getElementById("dueDate").value);
-    dueDate.setHours(8, 0, 0); // Example: Notification at 9 AM
+    dueDate.setHours(11, 10, 0); // Example: Notification at 9 AM
 
     if (!borrower) {
         alert("Please enter the borrower's name.");
@@ -56,16 +56,16 @@ document.getElementById("setRemainder").addEventListener("click", function () {
             if (Notification.permission === "granted") {
                 setTimeout(() => {
                     registration.showNotification("Reminder Alert", {
-                        body: Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).,
-                        icon: "/percentage.png" // Ensure this file exists
+                        body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
+                        icon: "/icon-192x192.png" // Ensure this file exists
                     });
                 }, timeUntilDue);
             } else {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
                         registration.showNotification("Reminder Alert", {
-                            body: Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).,
-                            icon: "/percentage.png"
+                            body: `Reminder for ${borrower}: Due date is today (${dueDate.toDateString()}).`,
+                            icon: "/icon-192x192.png"
                         });
                     } else {
                         alert("Notifications are blocked. Please enable them.");
@@ -87,10 +87,10 @@ function updateRemainderList() {
 
     remainderList.forEach(({ borrower, dueDate }, index) => {
         const listItem = document.createElement("li");
-        listItem.innerHTML = 
+        listItem.innerHTML = `
             <strong>${borrower}</strong> - Due on: ${new Date(dueDate).toDateString()}
             <button onclick="removeRemainder(${index})">Remove</button>
-        ;
+        `;
         listElement.appendChild(listItem);
     });
 }
